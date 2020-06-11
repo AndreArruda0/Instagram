@@ -1,6 +1,7 @@
-import React, {useState ,useEffect} from 'react';
+import React, {useState ,useEffect, useCallback} from 'react';
 import {View,FlatList} from 'react-native';
-import {Post, Header, Avatar, Name, PostImage, Description, Loading} from './styles';
+import {Post, Header, Avatar, Name, Description, Loading} from './styles';
+import LazyImage from '../../components/LazyImage';
 
 interface Feed {
     author:{
@@ -10,6 +11,8 @@ interface Feed {
     aspectRatio:string;
     image:string;
     description:string;
+    small:string;
+
 
 }
 
@@ -19,6 +22,7 @@ const Feed: React.FC = () => {
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [viewable, setViewable] = useState([]);
 
     async function loadPage(pageNumber = page, shouldRefresh = false){
             if(total && pageNumber>total) return;
@@ -67,7 +71,7 @@ const Feed: React.FC = () => {
                             <Avatar source={{uri: item.author.avatar}} />
                             <Name>{item.author.name}</Name>
                         </Header>
-                        <PostImage ratio={item.aspectRatio} source={{uri: item.image}} />
+                        <LazyImage  smallSource={{uri: item.small}} aspecRatio={item.aspectRatio} source={{uri: item.image}} />
                         <Description>
                             <Name>{item.author.name}</Name> {item.description}
                         </Description>
